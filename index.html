@@ -320,7 +320,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2022-04-02 15:52:14 / Modified: 17:46:48" itemprop="dateCreated datePublished" datetime="2022-04-02T15:52:14+08:00">2022-04-02</time>
+      <time title="Created: 2022-04-02 15:52:14 / Modified: 19:41:21" itemprop="dateCreated datePublished" datetime="2022-04-02T15:52:14+08:00">2022-04-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -379,8 +379,9 @@
 <p>Your deep learning code will often contain complicated, vectorized, and broadcasted operations. A relatively common bug I’ve come across a few times is that people get this wrong (e.g. they use view instead of transpose&#x2F;permute somewhere) and inadvertently mix information across the batch dimension. It is a depressing fact that your network will typically still train okay because it will learn to ignore data from the other examples. One way to debug this (and other related problems) is to set the loss to be something trivial like the sum of all outputs of example i, run the backward pass all the way to the input, and ensure that you get a non-zero gradient only on the i-th input. The same strategy can be used to e.g. ensure that your autoregressive model at time t only depends on 1..t-1. More generally, gradients give you information about what depends on what in your network, which can be useful for debugging.</p>
 </blockquote>
 </li>
-<li>先写specific function，再把它改成generalized版本。<br>####3.过拟合<br>在这一步，我们已经对数据有了充分了解，并有了一个可以正常运行的小模型和评估架子了。这样我们可以计算得到任何我们可以信任的指标了。下一步可以训练出一个好的模型了。<br>为了找到一个好的模型，下一步是：（1）找到一个模型使它过拟合（关注training loss），（2）并且进行正则化（牺牲部分training loss以提升validation loss）。试想一下，如果无法找到任何一个模型达到一个低错误率，这说明之前有些问题。</li>
+<li>先写specific function，再把它改成generalized版本。</li>
 </ol>
+<h4 id="3-过拟合"><a href="#3-过拟合" class="headerlink" title="3.过拟合"></a>3.过拟合</h4><p>在这一步，我们已经对数据有了充分了解，并有了一个可以正常运行的小模型和评估架子了。这样我们可以计算得到任何我们可以信任的指标了。下一步可以训练出一个好的模型了。<br>为了找到一个好的模型，下一步是：（1）找到一个模型使它过拟合（关注training loss），（2）并且进行正则化（牺牲部分training loss以提升validation loss）。试想一下，如果无法找到任何一个模型达到一个低错误率，这说明之前有些问题。</p>
 <p>过拟合这一步的tips：</p>
 <ul>
 <li><p>挑选模型。尤其在早期，不要搞些花里胡哨的。我总是建议人们找到最相关的文章直接复制他们最简单的结构，以获得良好的性能。</p>
