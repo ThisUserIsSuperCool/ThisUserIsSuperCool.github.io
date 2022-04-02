@@ -202,7 +202,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2022-04-02 17:49:43 / Modified: 22:18:42" itemprop="dateCreated datePublished" datetime="2022-04-02T17:49:43+08:00">2022-04-02</time>
+      <time title="Created: 2022-04-02 17:49:43 / Modified: 22:29:41" itemprop="dateCreated datePublished" datetime="2022-04-02T17:49:43+08:00">2022-04-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -265,23 +265,12 @@
 <li><p>deploy 成功但是页面没有更新？</p>
 <p>可能是两个问题：</p>
 <p>第一个：deployments没有active。解决方式是点击一下”github-pages” ，就会从变为active。</p>
-<img src="/Users/zuo/Library/Application Support/typora-user-images/image-20220402221218590.png" alt="image-20220402221218590" style="zoom:50%;" />
+<img src="/Users/zuo/Desktop/Screen Shot 2022-04-02 at 10.11.55 PM.png" alt="Screen Shot 2022-04-02 at 10.11.55 PM" style="zoom:50%;" />
 
 <p>第二个：分支设置错误：</p>
 <p>​            网上的教程一般是部署到master上去，而默认的是main分支。</p>
 <p>​            解决：修改部署分支为master。</p>
 <p>​            点击：settings–pages–scource修改。</p>
-<ul>
-<li><p>去deployments&#x2F;history看一下（点开）active的 “github-pages” ，再退回来，就会发现最新提交的就已经变成active的了。</p>
-</li>
-<li><p>指定分支更新：</p>
-<blockquote>
-<p>我的仓库里有两个分支，一个main一个master，而main才是“active”分支，博客页面所在的分支还是main分支。两个分支的内容截然不同，修改之后的博客代码文件更新在了master分支，而main分支保留的仍然是最开始未修改的文件。</p>
-<p><strong>pages服务使用的是我的main分支生成的页面，而我需要生成页面的代码是在master分支里的。</strong></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lu_xiuyuan/article/details/112056997">https://blog.csdn.net/lu_xiuyuan/article/details/112056997</a></p>
-</blockquote>
-</li>
-</ul>
 </li>
 </ol>
 <p>参考：</p>
