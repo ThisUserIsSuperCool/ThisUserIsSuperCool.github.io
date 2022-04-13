@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.11.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="video; machine learning; ppt attn 的各式变体，目的：减小运算量。 1 人为选择的attention mapfull attn 计算量很大，只计算局部 attn 有利于减少参数量。几种人为设定的attn如下：  local attn&#x2F;truncated attn，只计算相邻的 attn，类似于cnn。   Stride attn，计算相邻s步的attn。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="attn 的各式变体">
+<meta property="og:url" content="http://example.com/2022/04/09/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84attention/index.html">
+<meta property="og:site_name" content="起名字已经很难了为什么还要给blog起个title">
+<meta property="og:description" content="video; machine learning; ppt attn 的各式变体，目的：减小运算量。 1 人为选择的attention mapfull attn 计算量很大，只计算局部 attn 有利于减少参数量。几种人为设定的attn如下：  local attn&#x2F;truncated attn，只计算相邻的 attn，类似于cnn。   Stride attn，计算相邻s步的attn。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/e6c9d24egy1h10yx33y0hj209m090q3j.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/e6c9d24egy1h10yylrk64j20g00fuglx.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/e6c9d24egy1h10yzumgyoj20m80n0409.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/e6c9d24egy1h10z1cm308j20ag0acaa5.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/e6c9d24egy1h10zur5726j20jk0aidgt.jpg">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-5821c8e5fed43a3ff23bc5f2d7d5a41b_1440w.jpg">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-c962f0709eb82642f56c5526ad7113ca_1440w.jpg">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-d1b1eab50c9485ffae3d384ae022919c_1440w.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/e6c9d24egy1h126825hg1j20tm0oe415.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/e6c9d24egy1h12e0kkyuxj20vy0n2acf.jpg">
+<meta property="article:published_time" content="2022-04-09T10:03:08.000Z">
+<meta property="article:modified_time" content="2022-04-09T10:03:15.896Z">
+<meta property="article:author" content="有聊人士">
+<meta property="article:tag" content="李宏毅">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tva1.sinaimg.cn/large/e6c9d24egy1h10yx33y0hj209m090q3j.jpg">
+
+
+<link rel="canonical" href="http://example.com/2022/04/09/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84attention/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2022/04/09/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84attention/","path":"2022/04/09/各种各样的attention/","title":"attn 的各式变体"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>attn 的各式变体 | 起名字已经很难了为什么还要给blog起个title</title>
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">起名字已经很难了为什么还要给blog起个title</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BA%BA%E4%B8%BA%E9%80%89%E6%8B%A9%E7%9A%84attention-map"><span class="nav-number">1.</span> <span class="nav-text">1 人为选择的attention map</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%94%A8Clustering%E9%80%89%E6%8B%A9%E9%9C%80%E8%A6%81%E8%AE%A1%E7%AE%97%E7%9A%84attention%E4%BD%8D%E7%BD%AE%EF%BC%9AReformer-%E5%92%8C-Routing-Transformer"><span class="nav-number">2.</span> <span class="nav-text">2 用Clustering选择需要计算的attention位置：Reformer 和 Routing Transformer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%9B%B4%E6%8E%A5learn%E5%87%BAattention-map%EF%BC%9ASinkhorn-sorting-network"><span class="nav-number">3.</span> <span class="nav-text">3 直接learn出attention map：Sinkhorn sorting network</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E9%80%89%E5%87%BA%E6%9C%89%E4%BB%A3%E8%A1%A8%E6%80%A7%E7%9A%84columns%EF%BC%9ALinformer%E5%92%8CCompressed-Attention"><span class="nav-number">4.</span> <span class="nav-text">4 选出有代表性的columns：Linformer和Compressed Attention</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%94%B9%E5%8F%98%E7%9F%A9%E9%98%B5%E9%A1%BA%E5%BA%8F%E5%8F%AF%E4%BB%A5%E5%87%8F%E5%B0%91%E8%BF%90%E7%AE%97%E9%87%8F"><span class="nav-number">5.</span> <span class="nav-text">5 改变矩阵顺序可以减少运算量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A0%E4%B8%8Asoftmax%E8%BF%9B%E8%A1%8C%E8%80%83%E8%99%91"><span class="nav-number">5.0.1.</span> <span class="nav-text">加上softmax进行考虑</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Synthesizer-Is-attention-really-required"><span class="nav-number">6.</span> <span class="nav-text">6 Synthesizer: Is attention really required?</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">有聊人士</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/09/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84attention/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="有聊人士">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="起名字已经很难了为什么还要给blog起个title">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="attn 的各式变体 | 起名字已经很难了为什么还要给blog起个title">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          attn 的各式变体
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2022-04-09 18:03:08 / Modified: 18:03:15" itemprop="dateCreated datePublished" datetime="2022-04-09T18:03:08+08:00">2022-04-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/attention/" itemprop="url" rel="index"><span itemprop="name">attention</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=yHoAq1IT_og&t=18s">video</a>; <a target="_blank" rel="noopener" href="https://speech.ee.ntu.edu.tw/~hylee/ml/2022-spring.php">machine learning</a>; <a target="_blank" rel="noopener" href="https://speech.ee.ntu.edu.tw/~hylee/ml/ml2022-course-data/xformer%20(v8).pdf">ppt</a></p>
+<p><strong>attn 的各式变体，<u>目的：减小运算量。</u></strong></p>
+<h2 id="1-人为选择的attention-map"><a href="#1-人为选择的attention-map" class="headerlink" title="1 人为选择的attention map"></a>1 人为选择的attention map</h2><p>full attn 计算量很大，只计算局部 attn 有利于减少参数量。<u>几种人为设定的attn如下：</u></p>
+<ul>
+<li><p>local attn&#x2F;truncated attn，只计算相邻的 attn，类似于cnn。</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h10yx33y0hj209m090q3j.jpg" style="zoom:50%;" />
+</li>
+<li><p>Stride attn，计算相邻s步的attn。</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h10yylrk64j20g00fuglx.jpg" style="zoom:28%;" />
+</li>
+<li><p>global attn，计算与special token有关的attn，将special token看作所有位置信息的交互站。</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h10yzumgyoj20m80n0409.jpg" style="zoom:20%;" />
+</li>
+<li><p>Random attn</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h10z1cm308j20ag0acaa5.jpg" style="zoom:45%;" /></li>
+</ul>
+<p>哪个好？都要。<u>不同的head做不同的 attn</u>。Longformer; Big Bird</p>
+<h2 id="2-用Clustering选择需要计算的attention位置：Reformer-和-Routing-Transformer"><a href="#2-用Clustering选择需要计算的attention位置：Reformer-和-Routing-Transformer" class="headerlink" title="2 用Clustering选择需要计算的attention位置：Reformer 和 Routing Transformer"></a>2 用Clustering选择需要计算的attention位置：Reformer 和 Routing Transformer</h2><p><strong>以上的attn都是人为设定的，是否可以由机器决定位置是否需要计算attn？</strong></p>
+<p>在attn map上，权重大的地方，说明二者之间的关系更重要，希望将权重低的地方直接设为0（不计算）。问题是：如何估计值小的位置呢？</p>
+<p>Reformer 和 Routing Transformer提到了Clustering的方法。</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h10zur5726j20jk0aidgt.jpg" style="zoom:65%;" />
+
+<p><u>只计算同一个cluster里的vector之间的attn。</u></p>
+<h2 id="3-直接learn出attention-map：Sinkhorn-sorting-network"><a href="#3-直接learn出attention-map：Sinkhorn-sorting-network" class="headerlink" title="3 直接learn出attention map：Sinkhorn sorting network"></a>3 直接learn出attention map：Sinkhorn sorting network</h2><p>还有更自动化的方式。</p>
+<p>Sinkhorn sorting network：对input学习出一个低维矩阵，这个矩阵通过线性变换可以和某些运算可以生成一个和attn大小一致的0-1矩阵，以此控制0的位置的矩阵不进行运算。(<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2002.11296.pdf">https://arxiv.org/pdf/2002.11296.pdf</a>)</p>
+<img src="https://pic4.zhimg.com/80/v2-5821c8e5fed43a3ff23bc5f2d7d5a41b_1440w.jpg" style="zoom:50%;" />
+
+<h2 id="4-选出有代表性的columns：Linformer和Compressed-Attention"><a href="#4-选出有代表性的columns：Linformer和Compressed-Attention" class="headerlink" title="4 选出有代表性的columns：Linformer和Compressed Attention"></a>4 选出有代表性的columns：Linformer和Compressed Attention</h2><p>Linformer 中提出我们并不需要那么多attn：Many redundant columns！！！</p>
+<p>建议：提取出一些具有代表性的key而不是全部。</p>
+<img src="https://pic3.zhimg.com/80/v2-c962f0709eb82642f56c5526ad7113ca_1440w.jpg" style="zoom:50%;" />
+
+<p>注意到对于非 seq2seq 问题，可以考虑也提取出一些具有代表性的query。</p>
+<p>无论 query 还是 key，如何挑选出有代表性的columns呢？</p>
+<ul>
+<li>Linformer（<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2006.04768.pdf%EF%BC%89">https://arxiv.org/pdf/2006.04768.pdf）</a></li>
+<li>Compressed Attention（<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1801.10198.pdf%EF%BC%89">https://arxiv.org/pdf/1801.10198.pdf）</a></li>
+</ul>
+<img src="https://pic1.zhimg.com/80/v2-d1b1eab50c9485ffae3d384ae022919c_1440w.jpg" style="zoom:50%;" />
+
+<h2 id="5-改变矩阵顺序可以减少运算量"><a href="#5-改变矩阵顺序可以减少运算量" class="headerlink" title="5 改变矩阵顺序可以减少运算量"></a>5 改变矩阵顺序可以减少运算量</h2><p>对于$O&#x3D;VK^TQ$, </p>
+<p>其中：$V(d’,N),K^T(N,d),Q(d,N)$</p>
+<ul>
+<li>$O&#x3D;V(K^TQ)$：运算量为: $(N\times d \times N)+(d’ \times N \times N)&#x3D;(d+d’)N^2$</li>
+<li>$O&#x3D;(VK^T)Q$：运算量为: $(d’ \times N \times d)+(d’ \times d \times N)&#x3D;2d’dN$</li>
+</ul>
+<h4 id="加上softmax进行考虑"><a href="#加上softmax进行考虑" class="headerlink" title="加上softmax进行考虑"></a>加上softmax进行考虑</h4><p>对于原来（$b^1&#x3D;\sum_{i&#x3D;1}^{N} \alpha’<em>{1,i}v^i&#x3D;\sum</em>{i&#x3D;1}^{N}\frac{exp(q^1\cdot k^i)}{\sum_{j&#x3D;1}^{N}exp(q^1\cdot k^j)}v^i $）,设有一个函数$\phi()$，能使$exp(q\cdot k)\approx \phi(q)\cdot \phi(k)$。</p>
+<p>运算整理后得到：</p>
+<p>$$b^1&#x3D;\frac{\phi(q^1)\sum_{i&#x3D;1}^{N}\sum_{j&#x3D;1}^{N}k_1^jv^j}{\phi(q^1)\sum_{j&#x3D;1}^{N}(\phi(k^j))}$$</p>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h126825hg1j20tm0oe415.jpg" style="zoom:50%;" />
+
+<p>可见公式中只有$\phi(q^1)$与$b_1$的下角标1有关，所以，其它部分（因为是矩阵运算分子和分母要分开存在两个不同的变量中，且不能进行约分）可以预先计算并储存在变量中，后续直接调用数值，这么做大大地减小了运算量。</p>
+<p>如何理解这种运算方法(weighted sum)？template selection</p>
+<p>函数$\phi()$，能使$exp(q\cdot k)\approx \phi(q)\cdot \phi(k)$，这个函数是什么？</p>
+<ul>
+<li>Efficient attention（<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1812.01243.pdf%EF%BC%89">https://arxiv.org/pdf/1812.01243.pdf）</a></li>
+<li>Linear Transformer（<a target="_blank" rel="noopener" href="https://linear-transformers.com/%EF%BC%89">https://linear-transformers.com/）</a></li>
+<li>Random Feature Attention（<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2103.02143.pdf%EF%BC%89">https://arxiv.org/pdf/2103.02143.pdf）</a></li>
+<li>Performer（<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2009.14794.pdf%EF%BC%89">https://arxiv.org/pdf/2009.14794.pdf）</a></li>
+</ul>
+<h2 id="6-Synthesizer-Is-attention-really-required"><a href="#6-Synthesizer-Is-attention-really-required" class="headerlink" title="6 Synthesizer: Is attention really required?"></a>6 Synthesizer: Is attention really required?</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2005.00743">https://arxiv.org/abs/2005.00743</a></p>
+<blockquote>
+<p>The dot product self-attention is known to be central and indispensable to state-of-the-art Transformer models. But is it really required?</p>
+<p>we find that (1) random alignment matrices surprisingly perform quite competitively and (2) learning attention weights from token-token (query-key) interactions is useful but not that important after all. </p>
+</blockquote>
+<p>Attn map不使用q, k进行dot-product出来，而直接就是network parameters。</p>
+<p>Others:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2105.03824">Fnet: Mixing tokens with fourier transforms</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2105.08050">Pay Attention to MLPs</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2105.01601.pdf">MLP-Mixer: An all-MLP Architecture for Vision</a></li>
+</ul>
+<img src="https://tva1.sinaimg.cn/large/e6c9d24egy1h12e0kkyuxj20vy0n2acf.jpg" style="zoom:50%;" />
+
+<p>Ps.图中的圈圈大小代表了内存占用量。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%8E%E5%AE%8F%E6%AF%85/" rel="tag"># 李宏毅</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/04/05/python%E8%A7%84%E8%8C%83%E4%B8%8E%E5%BB%BA%E8%AE%AE/" rel="prev" title="python规范与建议">
+                  <i class="fa fa-chevron-left"></i> python规范与建议
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/04/11/2022-04-11-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E8%AE%BE%E8%AE%A1/" rel="next" title="神经网络的设计">
+                  神经网络的设计 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">此人类超勇</span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
